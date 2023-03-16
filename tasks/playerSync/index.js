@@ -61,6 +61,7 @@ class PlayerSync {
           (f) =>
             f.attributes.UnixTime > TwoWeeks && f.attributes.UnixTime <= NOW
         )
+      
     );
     return filteredFixtures;
   }

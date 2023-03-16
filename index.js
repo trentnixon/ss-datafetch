@@ -120,6 +120,8 @@ app.get("/fullupdate", asyncWrapper(async (req, res) => {
   }
 }));
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000; // Use the assigned Heroku port or default to 3000 for local development
+
+app.listen(PORT, () => {
   console.log("Statto updater is listening on port 3000!");
 });

@@ -198,8 +198,8 @@ function isPerformance(previousPerformances, fixture, field) {
   }
 
   const hasMatchingFixtureID = (performance) => {
-    console.log("attr on performance");
-    console.log(performance);
+    /* console.log("attr on performance");
+    console.log(performance); */
     const fixtureID =
       performance.attributes?.fixture?.data?.attributes?.fixtureID;
     return fixtureID === fixture.fixture[0];
@@ -211,7 +211,7 @@ function isPerformance(previousPerformances, fixture, field) {
       performance.attributes?.fixture?.data?.attributes?.fixtureID;
 
     if (fixtureID === undefined) {
-      console.log(performance, field, fixture);
+      //console.log(performance, field, fixture);
       DeleteItem(performance.id, field);
       return false;
     }

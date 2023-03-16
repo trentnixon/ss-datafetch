@@ -110,6 +110,7 @@ class SyncLeagueFixtures {
           f.attributes.teams.data.length === 0
       )
     );
+    
     const hasResult = Fixtures.flatMap((fixture) =>
       fixture.attributes.fixtures.data.filter(
         (f) =>

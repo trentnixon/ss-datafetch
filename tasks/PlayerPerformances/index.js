@@ -61,7 +61,7 @@ class PerformanceSync {
 
   async filterFixtures(Fixtures) {
     const NOW = Math.floor(Date.now() / 1000);
-    const DaysFromToday = 90;
+    const DaysFromToday = 14;
     const TwoWeeks = Math.floor(
       (Date.now() - DaysFromToday * 24 * 60 * 60 * 1000) / 1000
     );
@@ -211,7 +211,7 @@ function isPerformance(previousPerformances, fixture, field) {
       performance.attributes?.fixture?.data?.attributes?.fixtureID;
 
     if (fixtureID === undefined) {
-      //console.log(performance, field, fixture);
+      /* console.log(performance, field, fixture); */
       DeleteItem(performance.id, field);
       return false;
     }
@@ -228,6 +228,7 @@ const AddItem = async (ENDPOINT, DATA) => {
 
   return await fetcher(`${ENDPOINT}`, "POST", { data: DATA });
 };
+
 // UPdate?
 /* const UpdateItem = async (ID, ENDPOINT, DATA) => {
   //console.log("UpdateItem");

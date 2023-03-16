@@ -51,7 +51,7 @@ class PlayerSync {
 
   async filterFixtures(Fixtures) {
     const NOW = Math.floor(Date.now() / 1000);
-    const DaysFromToday = 90;
+    const DaysFromToday = 14;
     const TwoWeeks = Math.floor(
       (Date.now() - DaysFromToday * 24 * 60 * 60 * 1000) / 1000
     );
@@ -60,6 +60,12 @@ class PlayerSync {
         .filter(
           (f) =>
             f.attributes.UnixTime > TwoWeeks && f.attributes.UnixTime <= NOW
+        ).filter(
+          (f) =>
+            (!f.attributes.hasPlayerSync &&
+              f.attributes.teams.data.length !== 0) ||
+            f.attributes.player_battings.data.length === 0 ||
+            f.attributes.player_moms.data.length === 0
         )
       
     );

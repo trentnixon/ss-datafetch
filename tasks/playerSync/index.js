@@ -61,13 +61,6 @@ class PlayerSync {
           (f) =>
             f.attributes.UnixTime > TwoWeeks && f.attributes.UnixTime <= NOW
         )
-        .filter(
-          (f) =>
-            (!f.attributes.hasPlayerSync &&
-              f.attributes.teams.data.length !== 0) ||
-            f.attributes.player_battings.data.length === 0 ||
-            f.attributes.player_moms.data.length === 0
-        )
     );
     return filteredFixtures;
   }

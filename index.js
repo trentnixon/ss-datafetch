@@ -38,7 +38,7 @@ function asyncWrapper(fn) {
 // FRANCHISE SETUP
 app.get("/FranchiseSetup", asyncWrapper(async (req, res) => {
   try {
-    const { FranchiseID = 8 } = req.query;
+    const { FranchiseID } = req.query;
     const runner = new FullUpdateTaskRunner(FranchiseID, tasks.FranchiseSetup);
     const result = await runner.start();
     res.status(200).send(result);
@@ -51,7 +51,7 @@ app.get("/FranchiseSetup", asyncWrapper(async (req, res) => {
 // Fixtures
 app.get("/Fixtures", asyncWrapper(async (req, res) => {
   try {
-    const { FranchiseID = 1 } = req.query;
+    const { FranchiseID } = req.query;
     const runner = new FullUpdateTaskRunner(FranchiseID, tasks.FixtureUpdate);
     const result = await runner.start();
     res.status(200).send(result);
@@ -80,7 +80,7 @@ app.get("/PlayerPerformance",  asyncWrapper(async (req, res) => {
 // SyncTeams
 app.get("/SyncTeams", asyncWrapper(async (req, res) => {
   try {
-    const { FranchiseID = 8 } = req.query;
+    const { FranchiseID  } = req.query;
     const runner = new FullUpdateTaskRunner(FranchiseID, tasks.SyncTeams);
     const result = await runner.start();
     res.status(200).send(result);
@@ -93,7 +93,7 @@ app.get("/SyncTeams", asyncWrapper(async (req, res) => {
 // SyncLeagueTables
 app.get("/SyncLeagueTables", asyncWrapper(async (req, res) => {
   try {
-    const { FranchiseID = 8 } = req.query;
+    const { FranchiseID } = req.query;
     const runner = new FullUpdateTaskRunner(
       FranchiseID,
       tasks.SyncLeagueTables

@@ -116,63 +116,6 @@ class PerformanceSync {
       console.error(error);
     }
   }
-  /* async storePerformances(performances) {
-    //console.log('performances', performances)
-    try {
-      const playerIds = performances
-        .filter((performance) => performance?.PlayerID !== undefined)
-        .map((performance) => parseInt(performance.PlayerID));
-
-      const players = await Promise.all(playerIds.map((id) => IsPlayer(id)));
-      //console.log('players ',players)
-      const performanceFields = [
-        ["player_battings", "player-battings", "BATTING_Balls"],
-        ["player_bowlings", "player-bowlings", "BOWLING_Overs"],
-        ["player_catches", "player-catches", "PLAYERS_Catches"],
-        ["player_stumpings", "player-stumpings", "PLAYERS_Stumpings"],
-        ["player_moms", "player-moms", "isMOM"],
-      
-      ];
-
-      for (const performance of performances) {
-        //console.log("performance ", performance)
-        if (performance?.PlayerID !== undefined) {
-          const player = players.find(
-            (p) =>
-              p.length !== 0 &&
-              parseInt(p[0].attributes.PlayerID) ===
-                parseInt(performance.PlayerID)
-          );
-          //console.log(player)
-
-          if (player) {
-            performance.player = [player[0].id];
-
-            for (const [attribute, field, test] of performanceFields) {
-              // test this, it is wrong!
-              const isPerformanceInStrapi = isPerformance(
-                player[0].attributes[attribute],
-                performance,
-                field
-              );
-
-              //console.log(performance);
-
-              if (!isPerformanceInStrapi && performance[test] !== undefined) {
-                await AddItem(field, performance);
-              }
-            }
-          } else {
-            console.log(
-              `No player found for PlayerID: ${performance.PlayerID}`
-            );
-          }
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  } */
 
   // Task 5
   /* ************************************************************************** */
@@ -255,9 +198,10 @@ function isPerformance(previousPerformances, fixture, field) {
   }
 
   const hasMatchingFixtureID = (performance) => {
-    console.log('attr on performance')
-    console.log(performance)
-    const fixtureID = performance.attributes?.fixture?.data?.attributes?.fixtureID;
+    console.log("attr on performance");
+    console.log(performance);
+    const fixtureID =
+      performance.attributes?.fixture?.data?.attributes?.fixtureID;
     return fixtureID === fixture.fixture[0];
   };
 
@@ -268,10 +212,11 @@ function isPerformance(previousPerformances, fixture, field) {
   }; */
 
   const foundPerformance = previousPerformances.data.find((performance) => {
-    const fixtureID = performance.attributes?.fixture?.data?.attributes?.fixtureID;
+    const fixtureID =
+      performance.attributes?.fixture?.data?.attributes?.fixtureID;
 
     if (fixtureID === undefined) {
-      console.log(performance, field, fixture)
+      console.log(performance, field, fixture);
       DeleteItem(performance.id, field);
       return false;
     }

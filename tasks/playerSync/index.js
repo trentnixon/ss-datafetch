@@ -2,24 +2,27 @@ const fetcher = require("../../utils/fetcher");
 const Scrap = require("./Scrap");
 const qs = require("qs");
 
-
-
 // Common
 const getSelectedWatchlists = require("../../common/getSelectedWatchlists");
 
-class PlayerSync { 
+class PlayerSync {
   async run(FranchiseID) {
     try {
       console.log("Sync Players started", FranchiseID);
       const ID = FranchiseID;
       // task 1: find all leagues within the franchise
-      const SelectedWatchlists = await getSelectedWatchlists(ID,["fixtures","fixtures.player_moms"]);
-      //console.log(SelectedWatchlists); 
+      const SelectedWatchlists = await getSelectedWatchlists(ID, [
+        "fixtures",
+        "fixtures.teams",
+        "fixtures.player_battings",
+        "fixtures.player_moms",
+      ]);
+      //console.log(SelectedWatchlists);
 
       // task2
       // remove fixtures that have been completed
       const FilteredFixtures = await this.filterFixtures(SelectedWatchlists);
-      //console.log(FixtureswithNoResult.length);
+      console.log('FilteredFixtures.length ',FilteredFixtures.length);
 
       // task3
       // check to see if fixture is still active on LMS
@@ -48,20 +51,25 @@ class PlayerSync {
 
   async filterFixtures(Fixtures) {
     const NOW = Math.floor(Date.now() / 1000);
-    const DayFromDate= 90
+    const DaysFromToday = 90;
     const TwoWeeks = Math.floor(
-      (Date.now() - DayFromDate * 24 * 60 * 60 * 1000) / 1000
+      (Date.now() - DaysFromToday * 24 * 60 * 60 * 1000) / 1000
     );
-    return Fixtures.flatMap((fixture) =>
-      fixture.attributes.fixtures.data.filter(
-        (f) =>
-          !f.attributes.hasResult &&
-          f.attributes.UnixTime > TwoWeeks &&
-          f.attributes.UnixTime <= NOW &&
-          (f.attributes.hasPlayerSync !== true ||
-            f.attributes.player_moms.data.length === 0) 
-      )
+    const filteredFixtures = Fixtures.flatMap((fixture) =>
+      fixture.attributes.fixtures.data
+        .filter(
+          (f) =>
+            f.attributes.UnixTime > TwoWeeks && f.attributes.UnixTime <= NOW
+        )
+        .filter(
+          (f) =>
+            (!f.attributes.hasPlayerSync &&
+              f.attributes.teams.data.length !== 0) ||
+            f.attributes.player_battings.data.length === 0 ||
+            f.attributes.player_moms.data.length === 0
+        )
     );
+    return filteredFixtures;
   }
 
   // Task 3
@@ -85,7 +93,7 @@ class PlayerSync {
           if (response.length === 0) {
             CreatePlayer.push(item);
           } else {
-            //console.log("OLD PLAYER", response);
+            console.log("Player Already in Strapi", response[0].id, response[0].attributes.Name);
           }
         } catch (error) {
           console.error(error);
@@ -100,14 +108,16 @@ class PlayerSync {
   // Task 5
   /* ************************************************************************** */
   async CreateNewPlayers(PLAYERS) {
+    console.log("Create A New Player ")
     if (PLAYERS.length != 0) {
       for (let item of PLAYERS) {
         try {
-          return await CreatePlayers(item);
+          await CreatePlayers(item);
         } catch (error) {
           console.error(error);
         }
       }
+      return true; // Indicate that the players were processed
     } else {
       return false;
     }
@@ -130,26 +140,11 @@ const IsPlayer = async (ID) => {
     }
   );
 
-  return await fetcher(`players/?${query}`) 
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.log(error);
-      return false;
-    });
+  return await fetcher(`players/?${query}`);
 };
 
 const CreatePlayers = async (PLAYER) => {
-  //console.log("CREATE ID", PLAYER.Name, PLAYER.PlayerID);
   return await fetcher(`players/`, "POST", {
     data: { Name: PLAYER.Name, PlayerID: PLAYER.PlayerID },
-  })
-    .then((data) => {
-      return data;
-    })
-    .catch((error) => {
-      console.log(error);
-      return false;
-    });
+  });
 };

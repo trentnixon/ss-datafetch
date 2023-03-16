@@ -205,11 +205,6 @@ function isPerformance(previousPerformances, fixture, field) {
     return fixtureID === fixture.fixture[0];
   };
 
-  /* const hasMatchingFixtureID = (performance) => {
-    const fixtureID = performance.attributes?.fixture?.data?.attributes?.fixtureID;
-    const playerID = performance.attributes?.player?.data?.attributes?.PlayerID;
-    return fixtureID === fixture.fixture[0] && playerID === parseInt(fixture.PlayerID);
-  }; */
 
   const foundPerformance = previousPerformances.data.find((performance) => {
     const fixtureID =

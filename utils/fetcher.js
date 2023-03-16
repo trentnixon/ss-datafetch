@@ -1,17 +1,10 @@
 const axios = require("axios");
 const dotenv = require("dotenv");
-const qs = require("qs");
 
 // Load environment variables from .env file
 dotenv.config();
 
-/**
- * Makes an API request using Axios library with the given method, path and body.
- * @param {string} PATH - The path to the API endpoint.
- * @param {string} method - The HTTP method to use (default: "GET").
- * @param {Object} body - The request body (default: {}).
- * @returns {Promise<Object>} - The response data from the API request.
- */
+
 async function fetcher(PATH, method = "GET", body = {}) {
   let APIURL;
 

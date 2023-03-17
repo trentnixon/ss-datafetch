@@ -75,6 +75,12 @@ class PerformanceSync {
         (fixture) =>
           fixture.attributes.UnixTime > twoWeeks &&
           fixture.attributes.UnixTime <= now
+      ).filter(
+        (f) =>
+          (!f.attributes.hasPlayerSync &&
+            f.attributes.teams.data.length !== 0) ||
+          f.attributes.player_battings.data.length === 0 ||
+          f.attributes.player_moms.data.length === 0
       )
     );
 

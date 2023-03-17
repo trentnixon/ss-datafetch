@@ -17,7 +17,6 @@ class PlayerSync {
         "fixtures.player_battings",
         "fixtures.player_moms",
       ]);
-      //console.log(SelectedWatchlists);
 
       // task2
       // remove fixtures that have been completed

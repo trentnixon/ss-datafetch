@@ -65,7 +65,7 @@ class PerformanceSync {
   // Task 2
   async filterFixtures(selectedWatchlists) {
     const now = Math.floor(Date.now() / 1000);
-    const daysFromToday = 90;
+    const daysFromToday = 14;
     const twoWeeks = Math.floor(
       (Date.now() - daysFromToday * 24 * 60 * 60 * 1000) / 1000
     );

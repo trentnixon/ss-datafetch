@@ -51,7 +51,7 @@ class PlayerSync {
 
   async filterFixtures(Fixtures) {
     const NOW = Math.floor(Date.now() / 1000);
-    const DaysFromToday = 14;
+    const DaysFromToday = 7;
     const TwoWeeks = Math.floor(
       (Date.now() - DaysFromToday * 24 * 60 * 60 * 1000) / 1000
     );

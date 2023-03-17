@@ -98,7 +98,7 @@ class Scrap {
     for (let i = 0; i < this.DATA.length; i++) {
 
       console.log(`Fetching Player Performces : ${i} of ${this.DATA.length}`)
-      const isGame = await CheckifGameWentAhead(
+      const isGame = await CheckifGameWentAhead( 
         this.DATA[i].attributes.fixtureID
       );
 
@@ -108,8 +108,10 @@ class Scrap {
     }
 
     const mergedArray = mergeArrays(OBJ);
-    //console.log(mergedArray)
-    return mergedArray;
+    /* console.log("mergedArray")
+    console.log(mergedArray.length, this.DATA.length) */
+  
+     return mergedArray;
   }
 }
 
@@ -211,7 +213,7 @@ CheckifGameWentAhead = async (fixtureID) => {
 /* ********************************************************************** */
 // GAME DATA UTILS
 const findManOfMatch = (fixtureStats) => {
-  //console.log("findManOfMatch", fixtureStats)
+
   const $info = cheerio.load(fixtureStats);
   const momFieldBlock = $info(selectors.MOMField);
   //console.log(momFieldBlock)
@@ -357,7 +359,7 @@ const createBattingObj = (data, TEAMID, FixtureID) => {
 const createBowlingObj = (DATA, TEAMID, FixtureID) => {
   const BowlingARR = [];
   const $ = cheerio.load(DATA);
-  const rows = $(selectors.ParentSelector)
+  const rows = $(selectors.ParentSelector) 
     .find("table:nth-child(2) tbody")
     .children()
     .toArray()
@@ -377,8 +379,8 @@ const createBowlingObj = (DATA, TEAMID, FixtureID) => {
         const bowlingObj = {
           fixture: [FixtureID],
           Name: playerName,
-          PlayerID: linkSplit[1],
-          player: [linkSplit[1]],
+          PlayerID: parseInt(linkSplit[1]),
+          //player: [parseInt(linkSplit[1])],
           //StrapiID: playerStrapiID,
           BOWLING_Overs: CheckIntisNotEmpty(
             $(row).find("td:nth-child(2)").text()

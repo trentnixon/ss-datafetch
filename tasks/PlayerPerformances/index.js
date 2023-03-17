@@ -4,6 +4,9 @@ const qs = require("qs");
 
 /*
   THIS CLASS NEEDS A LOT OF WORK
+
+  REWRITE THIS WHOLE THING!!!
+
   - its adding plyer performances multiple times
   - MoM check
   - has fixture check 
@@ -18,6 +21,7 @@ class PerformanceSync {
     try {
       console.log("Performance Sync started", FranchiseID);
       const ID = FranchiseID;
+      /* *********************************************************************** */
       // task 1: find all leagues within the franchise
       const SelectedWatchlists = await getSelectedWatchlists(ID, [
         "fixtures",
@@ -26,26 +30,24 @@ class PerformanceSync {
         "fixtures.player_moms",
       ]);
 
-      //console.log(SelectedWatchlists)
-      // task2
-      // remove fixtures that have been completed
-      const FilteredFixtures = await this.filterFixtures(SelectedWatchlists);
-      console.log(
-        "Number of fixtures to process after filtering = ",
-        FilteredFixtures.length
+      /* *********************************************************************** */
+      // task2 - Remove fixtures that have been completed
+      const filteredFixtures = await this.filterFixtures(SelectedWatchlists);
+
+      /* *********************************************************************** */
+      // task3 - check to see if fixture is still active on LMS
+      const scrappedPerformances = await this.scrapFixturePerformances(
+        filteredFixtures
       );
+      //console.log(scrappedPerformances)
 
-      // task3
-      // check to see if fixture is still active on LMS
-      const Performances = await this.FindPerformances(FilteredFixtures);
+      /* *********************************************************************** */
+      // task4 -
+      await this.updatePlayerIdsWithDatabaseIds(scrappedPerformances);
 
-      // task4
-      // check to see if fixture is still active on LMS
-      await this.storePerformances(Performances);
-      //console.log(PLAYERSTOCREATE);
-
+      //console.log(PerformancesWithPlayerIDS)
       // task 5
-      await this.UpdatehasPlayers(FilteredFixtures);
+      await this.UpdatehasPlayers(filteredFixtures);
 
       console.log("Performance Sync Completed", FranchiseID);
       return { status: true };
@@ -56,77 +58,77 @@ class PerformanceSync {
     }
   }
 
-  // Task 2
-  /* ************************************************************************ */
+  /* *********************************************************************** */
+  /* TASKS */
+  /* *********************************************************************** */
 
-  async filterFixtures(Fixtures) {
-    const NOW = Math.floor(Date.now() / 1000);
-    const DaysFromToday = 14;
-    const TwoWeeks = Math.floor(
-      (Date.now() - DaysFromToday * 24 * 60 * 60 * 1000) / 1000
+  // Task 2
+  async filterFixtures(selectedWatchlists) {
+    const now = Math.floor(Date.now() / 1000);
+    const daysFromToday = 90;
+    const twoWeeks = Math.floor(
+      (Date.now() - daysFromToday * 24 * 60 * 60 * 1000) / 1000
     );
-    const filteredFixtures = Fixtures.flatMap((fixture) =>
-      fixture.attributes.fixtures.data
-        .filter(
-          (f) =>
-            f.attributes.UnixTime > TwoWeeks && f.attributes.UnixTime <= NOW
-        )
-        .filter(
-          (f) =>
-            (!f.attributes.hasPlayerSync &&
-              f.attributes.teams.data.length !== 0) ||
-            f.attributes.player_battings.data.length === 0 ||
-            f.attributes.player_moms.data.length === 0
-        )
+
+    const filteredFixtures = selectedWatchlists.flatMap((watchlist) =>
+      watchlist.attributes.fixtures.data.filter(
+        (fixture) =>
+          fixture.attributes.UnixTime > twoWeeks &&
+          fixture.attributes.UnixTime <= now
+      )
     );
+
     return filteredFixtures;
   }
 
   // Task 3
   /* ************************************************************************ */
 
-  async FindPerformances(FilteredFixtures) {
-    const scraper = new Scrap();
-    const Performances = await scraper.startScraping(FilteredFixtures);
-    //console.log(Performances)
-    return Performances;
+  async scrapFixturePerformances(FilteredFixtures) {
+    try {
+      const scraper = new Scrap();
+      const Performances = await scraper.startScraping(FilteredFixtures);
+      console.log("Performances", Performances.length);
+      //console.log(Performances);
+      return Performances;
+    } catch (error) {
+      console.error("Error in FindPerformances:", error);
+      return [];
+    }
   }
 
   // Task 4
-  /* ************************************************************************** */
-  async storePerformances(performances) {
+  /* ************************************************************************ */
+  async updatePlayerIdsWithDatabaseIds(scrappedPerformances) {
     try {
-      const playerIds = performances
-        .filter((performance) => performance?.PlayerID !== undefined)
-        .map((performance) => parseInt(performance.PlayerID));
+      // Iterate through the scrappedPerformances array
+      for (const performance of scrappedPerformances) {
+        // Query the player data from the database using the PlayerID
+        const player = await IsPlayerCheck(performance.PlayerID);
 
-      const players = await Promise.all(playerIds.map((id) => IsPlayer(id)));
-      const performanceFields = [
-        ["player_battings", "player-battings", "BATTING_Balls"],
-        ["player_bowlings", "player-bowlings", "BOWLING_Overs"],
-        ["player_catches", "player-catches", "PLAYERS_Catches"],
-        ["player_stumpings", "player-stumpings", "PLAYERS_Stumpings"],
-        ["player_moms", "player-moms", "isMOM"],
-      ];
-
-      for (const performance of performances) {
-        await processPerformance(performance, players, performanceFields);
+        if (player.length !== 0) {
+          performance.player = [player[0].id];
+          await savePerformanceToDB(performance, player);
+        } else {
+          console.log("Player Length === 0 ", performance.PlayerID);
+        }
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error updating player IDs with database IDs:", error);
     }
+    return scrappedPerformances;
   }
 
   // Task 5
   /* ************************************************************************** */
-  async UpdatehasPlayers(FilteredFixtures) {
+  async UpdatehasPlayers(filteredFixtures) {
     //console.log("FilteredFixtures ", FilteredFixtures);
-    for (let item of FilteredFixtures) {
+    for (let item of filteredFixtures) {
       try {
         //console.log(item.id);
         await hasPlayerUpdate(item.id);
       } catch (error) {
-        console.error(error);
+        console.error("Error in UpdatehasPlayers:", error);
       }
     }
   }
@@ -134,114 +136,118 @@ class PerformanceSync {
 
 module.exports = PerformanceSync;
 
-// Point 2: Split storePerformances into smaller functions
-async function processPerformance(performance, players, performanceFields) {
-  if (performance?.PlayerID !== undefined) {
-    const player = players.find(
-      (p) =>
-        p.length !== 0 &&
-        parseInt(p[0].attributes.PlayerID) === parseInt(performance.PlayerID)
-    );
+const savePerformanceToDB = async (
+  LMSscrapedperformance,
+  PlayersStrapiEntry
+) => {
+  try {
+    const performanceFields = [
+      ["player_battings", "player-battings", "BATTING_Balls"],
+      ["player_bowlings", "player-bowlings", "BOWLING_Overs"],
+      ["player_catches", "player-catches", "PLAYERS_Catches"],
+      ["player_stumpings", "player-stumpings", "PLAYERS_Stumpings"],
+      ["player_moms", "player-moms", "isMOM"],
+    ];
 
-    if (player) {
-      performance.player = [player[0].id];
+    if (PlayersStrapiEntry.length !== 0) {
+      for (const [table, endpoint, field] of performanceFields) {
+        // is there a marker on the OBJ to keep check it for a value on Strapi?
+        //console.log(LMSscrapedperformance)
+        if (LMSscrapedperformance[field] === undefined) continue;
 
-      for (const [attribute, field, test] of performanceFields) {
-        const isPerformanceInStrapi = isPerformance(
-          player[0].attributes[attribute],
-          performance,
-          field
+        const fixtureId = LMSscrapedperformance.fixture[0];
+
+        // Check if the PlayersStrapiEntry already has performance details added to the DB
+        const hasDetails = await hasPerformanceDetails(
+          PlayersStrapiEntry[0],
+          fixtureId,
+          table
         );
 
-        if (!isPerformanceInStrapi && performance[test] !== undefined) {
-          await AddItem(field, performance);
+        if (hasDetails) {
+          //await updatePerformance(LMSscrapedperformance, endpoint);
+        } else {
+          const added = await addNewPerformance(
+            LMSscrapedperformance,
+            endpoint
+          );
+          console.log(`Perfromance Added !! ${added.id} `);
         }
       }
     } else {
-      console.log(`No player found for PlayerID: ${performance.PlayerID}`);
+      console.log(
+        "Player not found in the database:",
+        LMSscrapedperformance.PlayerID
+      );
     }
+  } catch (error) {
+    console.error("Error saving LMSscrapedperformance to DB:", error);
   }
-}
-
-const IsPlayer = async (ID) => {
-  const query = qs.stringify(
-    {
-      filters: {
-        PlayerID: {
-          $eq: ID,
-        },
-      },
-      populate: [
-        "player_battings",
-        "player_battings.fixture",
-        "player_bowlings",
-        "player_bowlings.fixture",
-        "player_catches",
-        "player_catches.fixture",
-        "player_stumpings",
-        "player_stumpings.fixture",
-        "player_moms",
-        "player_moms.fixture",
-      ],
-    },
-    {
-      encodeValuesOnly: true, // prettify URL
-    }
-  );
-
-  return await fetcher(`players/?${query}`);
 };
 
-function isPerformance(previousPerformances, fixture, field) {
-  if (!previousPerformances?.data) {
-    return false;
+const hasPerformanceDetails = async (PlayersStrapiEntry, fixtureId, table) => {
+  // Check if the field exists in the player attributes and contains data
+  if (PlayersStrapiEntry.attributes[table]?.data) {
+    // Check if the performance details for the given fixture ID exist in the data array
+    const existingPerformance = PlayersStrapiEntry.attributes[table].data.find(
+      (performance) => performance?.attributes?.fixture?.data?.id === fixtureId
+    );
+    // Return true if the performance details exist, otherwise return false
+    return !!existingPerformance;
   }
 
-  const hasMatchingFixtureID = (performance) => {
-    /* console.log("attr on performance");
-    console.log(performance); */
-    const fixtureID =
-      performance.attributes?.fixture?.data?.attributes?.fixtureID;
-    return fixtureID === fixture.fixture[0];
-  };
+  // If the table does not exist or does not contain data, return false
+  return false;
+};
 
+const IsPlayerCheck = async (ID) => {
+  try {
+    const query = qs.stringify(
+      {
+        filters: {
+          PlayerID: {
+            $eq: ID,
+          },
+        },
+        populate: [
+          "player_battings",
+          "player_battings.fixture",
+          "player_bowlings",
+          "player_bowlings.fixture",
+          "player_catches",
+          "player_catches.fixture",
+          "player_stumpings",
+          "player_stumpings.fixture",
+          "player_moms",
+          "player_moms.fixture",
+        ],
+        fields: ["Name"],
+      },
+      {
+        encodeValuesOnly: true, // prettify URL
+      }
+    );
 
-  const foundPerformance = previousPerformances.data.find((performance) => {
-    const fixtureID =
-      performance.attributes?.fixture?.data?.attributes?.fixtureID;
+    return await fetcher(`players/?${query}`);
+  } catch (error) {
+    console.error(`Error fetching player with ID ${ID}:`, error);
+    return [];
+  }
+};
 
-    if (fixtureID === undefined) {
-      /* console.log(performance, field, fixture); */
-      DeleteItem(performance.id, field);
-      return false;
-    }
-
-    return hasMatchingFixtureID(performance);
-  });
-
-  return Boolean(foundPerformance);
-}
+/* API CALLS */
 
 // Add New
-const AddItem = async (ENDPOINT, DATA) => {
-  if (ENDPOINT === "player-moms" && DATA?.isMOM === undefined) return false;
+//LMSscrapedperformance, endpoint, field
+const addNewPerformance = async (DATA, endpoint) => {
+  if (endpoint === "player-moms" && DATA?.isMOM === undefined) return false;
 
-  return await fetcher(`${ENDPOINT}`, "POST", { data: DATA });
-};
-
-// UPdate?
-/* const UpdateItem = async (ID, ENDPOINT, DATA) => {
-  //console.log("UpdateItem");
-}; */
-// Delete
-const DeleteItem = async (ID, ENDPOINT) => {
-  console.log("DeleteItem ", ENDPOINT, ID);
-  //DELETE
-  return await fetcher(`${ENDPOINT}/${ID}`, "DELETE");
+  return await fetcher(`${endpoint}`, "POST", { data: DATA });
 };
 
 const hasPlayerUpdate = async (ID) => {
-  return await fetcher(`fixtures/${ID}`, "PUT", {
+  //console.log("hasPlayers ", ID);
+    return await fetcher(`fixtures/${ID}`, "PUT", {
     data: { hasPlayers: true, hasPlayerSync: true },
   });
 };

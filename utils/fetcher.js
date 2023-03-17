@@ -8,12 +8,19 @@ function logAxiosError(error) {
   console.error(`Error found on ${error.config.url}`);
 
   if (error.response) {
-    console.error('Response Error:');
-    console.error('Data:', error.response.data);
-    console.error('Status:', error.response.status);
-    console.error('Headers:', error.response.headers);
+    console.error("Response Error:");
+    console.error("Request URL:", error.response.config.url);
+    console.error("Request Method:", error.response.config.method);
+    console.error("Data:", error.response.data);
+    console.error("Status:", error.response.status);
+    console.error("Headers:", error.response.headers);
   } else if (error.request) {
-    console.error('Request Error:', error.request);
+    console.error("Request Error:");
+    console.error("Request URL:", error.config.url);
+    console.error("Request Method:", error.config.method);
+    console.error("Request status:", error.request.status);
+    console.error("Request statusText:", error.request.statusText);
+    /* console.error("Request:", error.request); */
   } else {
     console.error('General Error:', error.message);
   }

@@ -98,7 +98,9 @@ class FullUpdateTaskRunner {
           UpdateProgress: Math.round((this.taskIndex / this.totalTasks) * 100),
           totalDuration: totalDuration,
           _ID: this.FranchiseID,
+          isUpdating: true,
         });
+        console.log("FullUpdateTaskRunner Errtor catch")
         console.log(error);
     res.status(500).send("An error occurred while running the tasks");
   }

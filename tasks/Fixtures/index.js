@@ -203,7 +203,7 @@ class SyncLeagueFixtures {
     const promises = checkFixture.toBeDeleted.map(async (item) => {
       try {
         //console.log("DELETE ", item.id);
-        const response = await fetcher(`fixtures/${item.id}`, "DELETE");
+        await fetcher(`fixtures/${item.id}`, "DELETE");
         //console.log(response);
       } catch (error) {
         console.error(error);

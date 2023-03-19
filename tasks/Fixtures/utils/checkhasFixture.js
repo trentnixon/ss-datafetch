@@ -15,7 +15,7 @@ class CheckHasFixture {
     while (this.pointer < this.data.length) {
       const fixture = this.data[this.pointer];
       await this.fetchUrl(fixture);
-      this.pointer++;
+      this.pointer++; 
     }
     return { activeFixtures: this.activeFixtures, toBeDeleted: this.toBeDeleted };
   }

@@ -14,7 +14,7 @@ class CheckHasFixture {
   async startLookup() {
     while (this.pointer < this.data.length) {
       const fixture = this.data[this.pointer];
-      await this.fetchUrl(fixture);
+      await this.fetchUrl(fixture); 
       this.pointer++; 
     }
     return { activeFixtures: this.activeFixtures, toBeDeleted: this.toBeDeleted };
@@ -22,8 +22,8 @@ class CheckHasFixture {
 
   async fetchUrl(fixture) {
     //console.log(`Syncing Fixture ${this.pointer} of ${this.data.length - 1}`);
-    const fixtureUrl = `${process.env.LMS_scrapURL}${process.env.LMS_pathFixtureInfo}${fixture.attributes.fixtureID}`;
-    //console.log(fixtureUrl)
+    const fixtureUrl = `${process.env.LMS_scrapURL}${process.env.LMS_PATH_Matchinfo}${fixture.attributes.fixtureID}`;
+    console.log('fixtureUrl ',fixtureUrl)
 
     try {
       const response = await axios.get(fixtureUrl);

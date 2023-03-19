@@ -34,7 +34,7 @@ class Scrap {
     const isManOfMatch = await findManOfMatch(fixtureStats);
 
     // Get the Fixtures INFO
-    const InfoPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Fixture_Info}${FixtureID}`;
+    const InfoPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Matchinfo}${FixtureID}`;
     const FIXTUREINFO = await getInfo(InfoPath);
     const INFOSTATS = await createInfoStats(FIXTUREINFO, LEAGUE);
 
@@ -195,7 +195,7 @@ findStrapiID = (ID) => {
 
 CheckifGameWentAhead = async (fixtureID) => {
   // Get the Fixtures STATS
-  const InfoPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Fixture_Info}${fixtureID}`;
+  const InfoPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Matchinfo}${fixtureID}`;
   //console.log(InfoPath)
   const FIXTUREINFO = await getInfo(InfoPath);
   Info = cheerio.load(FIXTUREINFO);

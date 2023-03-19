@@ -192,7 +192,7 @@ class SyncLeagueFixtures {
 
     for (let i = 0; i < Fixtures.length; i++) {
       try {
-        await checkFixture.startLookup();
+        await checkFixture.startLookup(); 
         //checkFixture.movePointer();
       } catch (error) {
         console.log("Error: ", error);

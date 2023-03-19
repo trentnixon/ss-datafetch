@@ -22,7 +22,8 @@ class CheckHasFixture {
 
   async fetchUrl(fixture) {
     //console.log(`Syncing Fixture ${this.pointer} of ${this.data.length - 1}`);
-    const fixtureUrl = `${process.env.LMS_scrapURL}${process.env.LMS_PATH_Matchinfo}${fixture.attributes.fixtureID}`;
+    const fixtureUrl = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Matchinfo}${fixture.attributes.fixtureID}`;
+    //const fixtureUrl = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Results}${league.Path}`;
     console.log("fixtureUrl Check has Fixture", fixtureUrl);
 
     try {

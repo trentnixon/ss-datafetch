@@ -72,7 +72,7 @@ class SyncLeagueFixtures {
 
       // task 8
       // check to see if fixture is still active on LMS
-      //await this.hasLMSFixtures_DeleteLMSFixtue(StrapiFixtureWithNoResult);
+      await this.hasLMSFixtures_DeleteLMSFixtue(StrapiFixtureWithNoResult);
       //console.log('FixturesWithActiveLMSPages ',FixturesWithActiveLMSPages.length);
 
       // Return true to indicate success

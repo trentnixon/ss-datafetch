@@ -46,7 +46,7 @@ class Scrapper {
   fetchUrl = async (league) => {
     try {
       const fixtureUrl = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Results}${league.Path}`;
-      //console.log(fixtureUrl);
+      console.log("fixtureUrl Get new league table ", fixtureUrl);
       const res = await axios.get(fixtureUrl);
       if (res.status === 200) {
         this.$ = cheerio.load(res.data);

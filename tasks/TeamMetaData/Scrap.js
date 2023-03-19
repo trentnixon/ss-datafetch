@@ -35,7 +35,8 @@ class SCRAP {
 
     this.FetchURL = async (TEAM) => {
       const FixtureURL = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_TeamProfile}${TEAM.attributes.TeamID}`;
-      console.log(FixtureURL);
+      
+      console.log("fixtureUrl Team Meta Data ", fixtureUrl);
       const response = await axios.get(FixtureURL);
       const html = response.data;
 

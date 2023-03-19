@@ -32,7 +32,7 @@ async function scrapLeague(league, LEAGUE_ID) {
   
     //console.log('SCRAP LEAGUE ', league.Name)
     const fixtureURL = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Fixtures}${league.PATH}`
-  
+    console.log("fixtureUrl scrap New Fixtures ", fixtureUrl);
     try {
       const response = await axios.get(fixtureURL);
       const $ = cheerio.load(response.data);

@@ -98,7 +98,7 @@ class PerformanceSync {
       //console.log(Performances);
       return Performances;
     } catch (error) {
-      console.error("Error in FindPerformances:", error);
+      console.error("Error in scrapFixturePerformances:", error);
       return [];
     }
   }

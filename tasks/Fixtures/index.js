@@ -36,6 +36,7 @@ class SyncLeagueFixtures {
         "fixtures",
         "fixtures.teams",
       ]);
+      console.log("SelectedWatchlists LENGTH", SelectedWatchlists.length)
 
       // task2
       // scrap LMS for items

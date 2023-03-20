@@ -12,8 +12,9 @@ class FixtureResults {
       const ID = FranchiseID;
       // task 1: find all leagues within the franchise
       const SelectedWatchlists = await getSelectedWatchlists(ID,["franchise"]); 
-      //console.log("SelectedWatchlists ",SelectedWatchlists);
-
+      
+      console.log("SelectedWatchlists LENGTH", SelectedWatchlists.length)
+       //console.log("SelectedWatchlists ",SelectedWatchlists);
       // task2
       // remove fixtures that have been completed
       const Results = await this.ScrapFixtureResults(SelectedWatchlists);

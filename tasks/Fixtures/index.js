@@ -201,7 +201,7 @@ class SyncLeagueFixtures {
     }
 
     // DELETE the strapi fixtures that dont have a Valif URL
-    console.log('checkFixture.toBeDeleted', checkFixture.toBeDeleted)
+    //console.log('checkFixture.toBeDeleted', checkFixture.toBeDeleted)
     const promises = checkFixture.toBeDeleted.map(async (item) => {
       try {
         //console.log("DELETE ", item.id);

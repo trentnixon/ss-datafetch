@@ -116,7 +116,7 @@ class PerformanceSync {
           performance.player = [player[0].id];
           await savePerformanceToDB(performance, player);
         } else {
-          console.log("Player Length === 0 ", performance.PlayerID);
+          console.log(`LMS Player ID ${performance.PlayerID} is not in the Statto DB`);
         }
       }
     } catch (error) {

@@ -9,8 +9,6 @@ const PORT = process.env.PORT || 3000;
 
 */
 
-// Tasks
-const tasks = require("./lib/TASKS");
 /*
 Tasks
  FULLUPDATE,

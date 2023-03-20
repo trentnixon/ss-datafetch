@@ -21,12 +21,12 @@ class PlayerSync {
       // task2
       // remove fixtures that have been completed
       const FilteredFixtures = await this.filterFixtures(SelectedWatchlists);
-      console.log('FilteredFixtures.length ',FilteredFixtures.length);
+      //console.log('FilteredFixtures.length ',FilteredFixtures.length);
 
       // task3
       // check to see if fixture is still active on LMS
       const PLAYERS = await this.ScrapPlayers(FilteredFixtures);
-      //console.log(PLAYERS);
+      //console.log('ScrapPlayers ',PLAYERS);
 
       // task4
       // check to see if fixture is still active on LMS
@@ -75,6 +75,9 @@ class PlayerSync {
   /* ************************************************************************ */
 
   async ScrapPlayers(FilteredFixtures) {
+
+    console.log(`Scrap ${FilteredFixtures.length} gamed for players`)
+
     const scraper = new Scrap();
     const PLAYERS = await scraper.startScraping(FilteredFixtures);
     return PLAYERS;
@@ -83,6 +86,7 @@ class PlayerSync {
   // Task 4
   /* ************************************************************************** */
   async CheckPlayerStatus(PLAYERS) {
+    console.log('CheckPlayerStatus ', PLAYERS)
     const CreatePlayer = [];
     if (PLAYERS.length != 0) {
       for (let item of PLAYERS) {
@@ -107,7 +111,7 @@ class PlayerSync {
   // Task 5
   /* ************************************************************************** */
   async CreateNewPlayers(PLAYERS) {
-    console.log("Create A New Player ")
+    console.log("Create A New Player ", PLAYERS)
     if (PLAYERS.length != 0) {
       for (let item of PLAYERS) {
         try {

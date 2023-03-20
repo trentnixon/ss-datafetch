@@ -23,17 +23,17 @@ const Selectors = {
     }
   
     async FetchURL(_FIXTURE) {
-      const FixtureURL = `${process.env.LMS_scrapURL}${process.env.LMS_PATH_Matchinfo}${_FIXTURE}`;
+      const FixtureURL = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Matchinfo}${_FIXTURE}`;
       try {
         const response = await axios.get(FixtureURL);
         if (response.status === 200) {
           this.$ = cheerio.load(response.data);
           await this.ScrapPlayersFromScorecard(_FIXTURE);
         } else {
-          //console.log(`Unable to fetch data for fixtureID ${_FIXTURE}`);
+          console.log(`Unable to fetch data for fixtureID ${_FIXTURE}`);
         }
       } catch (error) {
-        //console.error(`Error fetching data from ${FixtureURL}: ${error}`);
+        console.error(`Error fetching data from ${FixtureURL}: ${error}`);
       }
     }
   
@@ -73,6 +73,7 @@ const Selectors = {
     async startScraping(DATA) {
       this.DATA = DATA;
       for (let i = 0; i < this.DATA.length; i++) {
+        console.log(`${this.DATA[i].attributes.fixtureID} ID look up`)
         await this.FetchURL(this.DATA[i].attributes.fixtureID);
       }
 

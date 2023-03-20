@@ -21,7 +21,7 @@ class SyncLeagues {
       // task 1: find all leagues within the franchise
       const SelectedFranchise = await getSelectedFranchise(ID);
 
-       console.log(SelectedFranchise.attributes.isCombinedFranchise) 
+      console.log(SelectedFranchise.attributes.isCombinedFranchise);
       // task 2: send the urls within that returned data to a scrapper
       const ScrapedOBJ = await this.scrapSelectedFranchise(SelectedFranchise);
       //console.log("Leagues found on LMS ", ScrapedOBJ.length);
@@ -32,7 +32,10 @@ class SyncLeagues {
       );
 
       // task 4: create or update the leagues by sending an API request to the Strapi Endpoint
-      await this.createOrUpdateLeagues(newLeagues, SelectedFranchise.attributes.isCombinedFranchise);
+      await this.createOrUpdateLeagues(
+        newLeagues,
+        SelectedFranchise.attributes.isCombinedFranchise
+      );
 
       console.log("SyncLeagues completed");
 
@@ -110,7 +113,7 @@ class SyncLeagues {
   }
   // Task 4
   /* ************************************************************************ */
-  async createOrUpdateLeagues(newLeagues, IsCombined=false) {
+  async createOrUpdateLeagues(newLeagues, IsCombined = false) {
     // TODO: create or update leagues using an API request to Strapi
     let result;
     try {
@@ -123,12 +126,12 @@ class SyncLeagues {
         );
       }
 
-      if(!IsCombined)
-      if (newLeagues.Archive) {
-        await Promise.all(
-          newLeagues.Archive.map((league) => ArchiveLeague(league))
-        );
-      }
+      if (!IsCombined)
+        if (newLeagues.Archive) {
+          await Promise.all(
+            newLeagues.Archive.map((league) => ArchiveLeague(league))
+          );
+        }
 
       result = true;
     } catch (error) {

@@ -6,7 +6,7 @@ async function getSelectedWatchlists(ID,populateFields=[]) {
         {
           filters: {
             franchise: { id: { $eq: ID } },
-            hasCompleted: { $null: true },
+            hasCompleted: { $ne: true },
           },
           populate: populateFields //["franchise","fixtures", "fixtures.teams","teams", "teams.Logo"],
         },

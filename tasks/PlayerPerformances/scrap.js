@@ -27,7 +27,7 @@ class Scrap {
     ];
 
     const fixtureStatsPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Fixture_Stats}${FixtureID}`;
-    //console.log("fixtureStatsPath ", fixtureStatsPath)
+    console.log("fixtureStatsPath ", fixtureStatsPath)
     const fixtureStats = await getInfo(fixtureStatsPath);
 
     const catchesObj = await getGameCatches(fixtureStats);

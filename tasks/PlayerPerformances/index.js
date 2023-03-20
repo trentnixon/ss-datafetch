@@ -96,9 +96,9 @@ class PerformanceSync {
       const Performances = await scraper.startScraping(FilteredFixtures);
       console.log("Performances", Performances.length);
       //console.log(Performances);
-      return Performances;
+      return Performances; 
     } catch (error) {
-      console.error("Error in scrapFixturePerformances:", error);
+      console.error("Error in scrapFixturePerformances:");
       return [];
     }
   }

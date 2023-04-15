@@ -25,7 +25,7 @@ class Scrap {
       `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Innings_1}${FixtureID}`,
       `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Innings_2}${FixtureID}`,
     ];
-
+ 
     const fixtureStatsPath = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Fixture_Stats}${FixtureID}`;
     console.log("fixtureStatsPath ", fixtureStatsPath)
     const fixtureStats = await getInfo(fixtureStatsPath);

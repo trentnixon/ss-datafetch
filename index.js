@@ -72,7 +72,7 @@ app.get('/PlayerPerformance', asyncWrapper(async (req, res) => {
 }));
 
 app.get('/SyncTeams', asyncWrapper(async (req, res) => {
-  await runTaskWithWorker(req, res, 'SyncTeams');
+  await runTaskWithWorker(req, res, 'SyncTeams'); 
 }));
 
 app.get('/SyncLeagueTables', asyncWrapper(async (req, res) => {

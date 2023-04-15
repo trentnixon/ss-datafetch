@@ -1,12 +1,12 @@
 const fetcher = require("../../utils/fetcher");
 const Scrapper = require("./scrap");
-const qs = require("qs");
+const qs = require("qs"); 
 
 // Common
 const getSelectedWatchlists = require("../../common/getSelectedWatchlists");
 
 class FixtureResults {
-  async run(FranchiseID) {
+  async run(FranchiseID) {  
     try {
       console.log("FixtureResults started", FranchiseID);
       const ID = FranchiseID;
@@ -18,7 +18,8 @@ class FixtureResults {
       // task2
       // remove fixtures that have been completed
       const Results = await this.ScrapFixtureResults(SelectedWatchlists);
-      //console.log(Results);
+      console.log("Results Results Results Results");
+      console.log(Results);
 
       // task3
       // check to see if fixture is still active on LMS
@@ -36,14 +37,12 @@ class FixtureResults {
   /* ************************************************************************ */
 
   async ScrapFixtureResults(DATA) {
-    //console.log("DATA", DATA.length)
     if (DATA.length === 0) {
       return [];
     } else {
-     
       const scrapper = new Scrapper(DATA);
-      await scrapper.movePointer();
-      return scrapper.resultsArr;
+      const resultsArr = await scrapper.processLeagues();
+      return resultsArr;
     }
   }
 

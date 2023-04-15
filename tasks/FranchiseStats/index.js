@@ -68,7 +68,7 @@ class GetFranchiseStats {
         "/ 0 (0.0)",
       ];
       return (
-        !REMOVESCORES.includes(o.attributes.HomeTeamResult) &&
+        !REMOVESCORES.includes(o.attributes.HomeTeamResult) && 
         !REMOVESCORES.includes(o.attributes.AwayTeamResult)
       );
     });

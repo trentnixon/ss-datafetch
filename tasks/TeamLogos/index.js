@@ -12,7 +12,7 @@ class TeamLogos {
       const ID = FranchiseID;
       // task 1: find all leagues within the franchise
       const SelectedWatchlists = await getSelectedWatchlists(ID,["teams", "teams.Logo"]); 
-      //console.log(SelectedWatchlists);
+      //console.log(SelectedWatchlists); 
 
       // task2
       // remove fixtures that have been completed
@@ -74,12 +74,11 @@ class TeamLogos {
       const promises = Images.map(item => UploadThisImage(item));
       const results = await Promise.all(promises);
       //console.log("Has uploaded", results);
-      return true;
+      return true; 
     } else {
       return false;
     }
   }
-
 }
 
 module.exports = TeamLogos;
@@ -90,7 +89,7 @@ const UploadThisImage = async (IMAGE) => {
       const response = await fetcher(`teams/Createlogo`, "POST", { IMAGE });
       return response;
     } catch (error) {
-      console.log(error);
+      console.log('');
       return false;
     }
   };

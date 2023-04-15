@@ -20,31 +20,21 @@ const selectors = {
 class Scrapper {
   constructor(DATA) {
     this.$;
-    this.pointer = -1;
-    this.AssignToLeague;
     this.DATA = DATA;
     this.resultsArr = []; // define the variable here
     this.Selectors = selectors;
   }
 
-  movePointer = async () => {
-    //console.log((this.pointer,this.DATA.length - 1) )
-    this.pointer++;
-
-    if (this.pointer === this.DATA.length) {
-      return this.resultsArr;
-    } else {
-      await this.startLookup();
+  async processLeagues() {
+    for (const league of this.DATA) {
+      await this.fetchUrl(league);
     }
-  };
+    return this.resultsArr;
+  }
 
-  startLookup = async () => {
-    const league = this.DATA[this.pointer];
-    await this.fetchUrl(league);
-  };
 
-  fetchUrl = async (league) => {
-    //console.log("league", league)
+
+  async fetchUrl(league) {
     try {
       const fixtureUrl = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Results}${league.attributes.PATH}`;
       console.log("fixtureUrl Fixture Results SCRAP", fixtureUrl);
@@ -57,15 +47,13 @@ class Scrapper {
           league,
           this.$(this.Selectors.LeagueSelector)
         );
-        this.movePointer();
       } else {
         throw new Error(`ERR Fetching League PATH on Results`);
       }
     } catch (err) {
       console.log(err);
-      this.movePointer();
     }
-  };
+  }
 
   processElement = (i, el, league) => {
     const $ = this.$;
@@ -87,14 +75,15 @@ class Scrapper {
       badScores.includes(homeResult) &&
       badScores.includes(awayResult)
     ) {
-      //console.log("IGNORE ROW");
+      console.log("IGNORE ROW fixHide");
     } else if (
       badScores.includes(homeResult) &&
       badScores.includes(awayResult)
     ) {
-      //console.log("IGNORE ROW");
+      console.log("IGNORE ROW Bad Score");
     } else if (link) {
-      const linkSplit = link.split("=");
+      console.log("USE ROW, HAS SCORE");
+      const linkSplit = link.split("="); 
       this.resultsArr.push({
         HomeTeamResult: homeResult,
         AwayTeamResult: awayResult,
@@ -114,6 +103,7 @@ class Scrapper {
         data.children().each((i, el) => {
           this.processElement(i, el, league);
         });
+        console.log("Loop Resolved")
         resolve();
       });
     };
@@ -123,3 +113,24 @@ class Scrapper {
 }
 
 module.exports = Scrapper;
+
+
+ /*  movePointer = async () => {
+    
+    this.pointer++;
+    console.log((this.pointer),(this.DATA.length - 1), this.DATA.length)
+    if (this.pointer === this.DATA.length) {
+      console.log("FINSHED RESULTS SCRAP")
+      return this.resultsArr;
+    } else {
+      console.log("ANOTHER LOOK UP")
+      await this.startLookup();
+    }
+  };
+
+  startLookup = async () => {
+    
+    const league = this.DATA[this.pointer];
+    console.log("LOOK UP NEW LEAGUE")
+    await this.fetchUrl(league);
+  }; */

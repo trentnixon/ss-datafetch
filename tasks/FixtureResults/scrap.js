@@ -32,8 +32,6 @@ class Scrapper {
     return this.resultsArr;
   }
 
-
-
   async fetchUrl(league) {
     try {
       const fixtureUrl = `${process.env.LMS_ScrapURL}${process.env.LMS_PATH_Results}${league.attributes.PATH}`;
@@ -75,14 +73,14 @@ class Scrapper {
       badScores.includes(homeResult) &&
       badScores.includes(awayResult)
     ) {
-      console.log("IGNORE ROW fixHide");
+      //console.log("IGNORE ROW fixHide");
     } else if (
       badScores.includes(homeResult) &&
       badScores.includes(awayResult)
     ) {
-      console.log("IGNORE ROW Bad Score");
+      //console.log("IGNORE ROW Bad Score");
     } else if (link) {
-      console.log("USE ROW, HAS SCORE");
+      //console.log("USE ROW, HAS SCORE");
       const linkSplit = link.split("="); 
       this.resultsArr.push({
         HomeTeamResult: homeResult,

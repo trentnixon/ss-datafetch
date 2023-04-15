@@ -18,8 +18,8 @@ class FixtureResults {
       // task2
       // remove fixtures that have been completed
       const Results = await this.ScrapFixtureResults(SelectedWatchlists);
-      console.log("Results Results Results Results");
-      console.log(Results);
+      //console.log("Results Results Results Results");
+      //console.log(Results);
 
       // task3
       // check to see if fixture is still active on LMS
